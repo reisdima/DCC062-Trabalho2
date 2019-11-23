@@ -18,6 +18,9 @@
 //Declaracoes globais
 //...
 //...
+char fsid = 0;  // Identificador do tipo de sistema de arquivos
+char *fsname = "myFS"; // Nome do tipo de sistema de arquivos
+int myFSslot;
 
 
 //Funcao para verificacao se o sistema de arquivos está ocioso, ou seja,
@@ -111,5 +114,20 @@ int myFSCloseDir (int fd) {
 //o sistema de arquivos tenha sido registrado com sucesso.
 //Caso contrario, retorna -1
 int installMyFS (void) {
-	return -1;
+    FSInfo *fs_info = (FSInfo*)malloc(sizeof(FSInfo));
+    fs_info->fsname = fsname;
+    fs_info->fsid = fsid;
+    fs_info->closeFn = myFSClose;
+    fs_info->closedirFn = myFSCloseDir;
+    fs_info->formatFn = myFSFormat;
+    fs_info->isidleFn = myFSIsIdle;
+    fs_info->linkFn = myFSLink;
+    fs_info->openFn = myFSOpen;
+    fs_info->opendirFn = myFSOpenDir;
+    fs_info->readFn = myFSRead;
+    fs_info->readdirFn = myFSReadDir;
+    fs_info->unlinkFn = myFSUnlink;
+    fs_info->writeFn = myFSWrite;
+    myFSslot = vfsRegisterFS(fs_info);
+    return myFSslot;
 }
