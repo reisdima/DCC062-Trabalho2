@@ -1,0 +1,52 @@
+# depslib dependency file v1.0
+1575321856 source:c:\users\camil\documents\dcc062c\disk.c
+	<stdlib.h>
+	<stdio.h>
+	"disk.h"
+
+1575321856 c:\users\camil\documents\dcc062c\disk.h
+	<windows.h>
+	<time.h>
+
+1575321856 source:c:\users\camil\documents\dcc062c\inode.c
+	<stdlib.h>
+	"inode.h"
+	"util.h"
+
+1575321856 c:\users\camil\documents\dcc062c\inode.h
+	"disk.h"
+
+1575321856 c:\users\camil\documents\dcc062c\util.h
+
+1575322248 source:c:\users\camil\documents\dcc062c\main.c
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	"myfs.h"
+	"vfs.h"
+	"inode.h"
+	"util.h"
+
+1575321856 c:\users\camil\documents\dcc062c\myfs.h
+	"vfs.h"
+
+1575321856 c:\users\camil\documents\dcc062c\vfs.h
+	"disk.h"
+
+1575321856 source:c:\users\camil\documents\dcc062c\myfs.c
+	<stdio.h>
+	<stdlib.h>
+	"myfs.h"
+	"vfs.h"
+	"inode.h"
+	"util.h"
+
+1575321856 source:c:\users\camil\documents\dcc062c\util.c
+	<stdlib.h>
+	"util.h"
+
+1575321856 source:c:\users\camil\documents\dcc062c\vfs.c
+	<stdio.h>
+	"vfs.h"
+	"inode.h"
+
