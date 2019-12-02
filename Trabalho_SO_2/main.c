@@ -16,6 +16,7 @@
 #include "myfs.h"
 #include "vfs.h"
 #include "inode.h"
+#include "util.h"
 
 #define MAX_CONNECTEDDISKS 1
 
@@ -721,24 +722,33 @@ void mainMenuSelection (void) {
 }
 
 int main (int argc, char* argv[]) {
+    
+    
+    installMyFS();
 
-	installMyFS();
+    for (int a=0; a<MAX_CONNECTEDDISKS; a++)
+            disks[a] = NULL;
+    for (int a=1; a<=MAX_FDS; a++) {
+            fds[a-1].status = 0;
+            fds[a-1].type = 0;
+            strcpy (fds[a-1].path, "");
+    }
 
-	for (int a=0; a<MAX_CONNECTEDDISKS; a++)
-		disks[a] = NULL;
-	for (int a=1; a<=MAX_FDS; a++) {
-		fds[a-1].status = 0;
-		fds[a-1].type = 0;
-		strcpy (fds[a-1].path, "");
-	}
+    if (argc > 1) 
+            doDiskConnect (argv[1]);
+    doDiskConnect("1"); // Função para colocada para facilitar testes
+    //mainMenuSelection();
+    doFSMountRoot();
+    vfsFormat (disks[0], 5, 0);
+    char setor[DISK_SECTORDATASIZE];
+    if(diskReadSector(rd, 1, setor) == 0){
+        //printf("%s", setor);
+    }
+    
+    
 
-	if (argc > 1) 
-		doDiskConnect (argv[1]);
+    printf ("\n");
 
-	mainMenuSelection();
-
-	printf ("\n");
-
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 
 }

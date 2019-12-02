@@ -16,7 +16,7 @@
 #include "disk.h"
 
 #define MAX_FDS 128             //Numero maximo de descritores de arquivos
-#define MAX_FILENAME_LENGTH 255 //Comprimento maximo do nome de arquivos
+#define MAX_FILENAME_LENGTH 12 //Comprimento maximo do nome de arquivos
 
 #define FILETYPE_DIR 128    //Identificador de tipo de arquivo: diretorio
 #define FILETYPE_REGULAR 64 //Identificador de tipo de arquivo: arq regular

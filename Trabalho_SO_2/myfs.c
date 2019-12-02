@@ -15,19 +15,74 @@
 #include "inode.h"
 #include "util.h"
 
+#define INODE_BEGINSECTOR 2
+#define INODE_ENDSECTOR = 5
+#define FREE_SPACE_MANAGEMENT_BEGINSECTOR = 5
+#define FREE_SPACE_MANAGEMENT_ENDSECTOR = 9
+#define ROOT_DIRECTORY_BEGINSECTOR = 10
+#define ROOT_DIRECTORY_ENDSECTOR = 13
+#define DATA_BEGINSECTOR = 13
+
 //Declaracoes globais
-//...
-//...
 char fsid = 0;  // Identificador do tipo de sistema de arquivos
 char *fsname = "myFS"; // Nome do tipo de sistema de arquivos
-int myFSslot;
 
+int myFSslot;
+int fileDescriptors [MAX_FDS];
+
+int NUM_SECTOR_PER_BLOCK = 4;
+
+int META_DATA_NUM_ITEM = 6;
+
+
+typedef struct
+{
+  int status;
+  int type;
+  unsigned int fd;
+  unsigned int pointer;
+  Disk *disk;
+  Inode *inode;
+  const char path[MAX_FILENAME_LENGTH + 1];
+} FileDescriptor;
+
+FileDescriptor files[MAX_FDS];
+
+
+// Funcao para salvar os caracteres de "from" em "saveTo" a partir de um offset
+void saveChar(char *saveTo, char *from, int offset, int arrayLength){
+    int lengthOfArray = (int)(sizeof(from) / sizeof(from[0]));
+    int j = offset;
+    for(int i = 0; i < arrayLength; i++){
+        saveTo[j] = from[i];
+        j++;
+    }
+    printf("%s", saveTo);
+    
+}
+
+void writeMetadata(Disk *d, char *metadataSector){
+    char aux[4];                // Vetor para armazenar os valores de unsigned int
+    unsigned int teste = 2;
+    int offsetCounter = 0;
+    ul2char(teste, aux);
+    for(int i = 0; i < 4; i++){
+        printf("%c", aux[i]);
+    }
+    saveChar(metadataSector, aux, 0, 4);
+    
+}
 
 //Funcao para verificacao se o sistema de arquivos está ocioso, ou seja,
 //se nao ha quisquer descritores de arquivos em uso atualmente. Retorna
 //um positivo se ocioso ou, caso contrario, 0.
 int myFSIsIdle (Disk *d) {
-	return 0;
+    for(int i = 0; i < MAX_FDS; i++){
+//        if (files[i] != NULL && diskGetId(d) == diskGetId(files[i].disk)){
+//                return 0;
+//        }
+    }
+    return 1;
 }
 
 //Funcao para formatacao de um disco com o novo sistema de arquivos
@@ -35,7 +90,18 @@ int myFSIsIdle (Disk *d) {
 //blocos disponiveis no disco, se formatado com sucesso. Caso contrario,
 //retorna -1.
 int myFSFormat (Disk *d, unsigned int blockSize) {
-	return -1;
+    char metadataSector[DISK_SECTORDATASIZE];
+    for(int i = 0; i < DISK_SECTORDATASIZE; i++){
+        metadataSector[i] = ' ';
+    }
+    writeMetadata(d, metadataSector);
+    
+    diskWriteSector(d, 2, metadataSector);
+    
+    for(int i = 0; i < MAX_FDS; i ++){
+        fileDescriptors[i] = 0;
+    }
+    return -1;
 }
 
 //Funcao para abertura de um arquivo, a partir do caminho especificado
@@ -68,6 +134,8 @@ int myFSClose (int fd) {
 	return -1;
 }
 
+
+//Não sera mais implementado
 //Funcao para abertura de um diretorio, a partir do caminho
 //especificado em path, no disco indicado por d, no modo Read/Write,
 //criando o diretorio se nao existir. Retorna um descritor de arquivo,
@@ -109,6 +177,7 @@ int myFSCloseDir (int fd) {
 	return -1;
 }
 
+
 //Funcao para instalar seu sistema de arquivos no S.O., registrando-o junto
 //ao virtual FS (vfs). Retorna um identificador unico (slot), caso
 //o sistema de arquivos tenha sido registrado com sucesso.
@@ -131,3 +200,6 @@ int installMyFS (void) {
     myFSslot = vfsRegisterFS(fs_info);
     return myFSslot;
 }
+
+
+
