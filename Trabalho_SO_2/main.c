@@ -736,14 +736,22 @@ int main (int argc, char* argv[]) {
 
     if (argc > 1) 
             doDiskConnect (argv[1]);
+    
     doDiskConnect("1"); // Função para colocada para facilitar testes
+    //doDiskConnect("grande.dsk"); // Função para colocada para facilitar testes
+    
     //mainMenuSelection();
     doFSMountRoot();
     vfsFormat (disks[0], 5, 0);
-    char setor[DISK_SECTORDATASIZE];
-    if(diskReadSector(rd, 1, setor) == 0){
-        //printf("%s", setor);
-    }
+    vfsOpen("testedct.doc");
+    
+    unsigned char setor[DISK_SECTORDATASIZE];
+//    for(int i = 0; i < DISK_SECTORDATASIZE; i++){
+//        setor[i] = 'u';
+//    }
+//    if(diskReadSector(rd, 1, setor) == 0){
+//        teste(setor);
+//    }
     
     
 
